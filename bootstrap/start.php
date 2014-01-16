@@ -21,14 +21,23 @@ $app = new Illuminate\Foundation\Application;
 | Laravel takes a dead simple approach to your application environments
 | so you can just specify a machine name for the host that matches a
 | given environment, then we will automatically detect it for you.
+| 
+| If you are deploying to an environment where the hostname will not be
+| consistent, you may set a LARAVEL_ENV environment variable instead.
 |
 */
 
-$env = $app->detectEnvironment(array(
+$env = $app->detectEnvironment(function()use($app){
+    
+    if(isset($_SERVER['LARAVEL_ENV'])) return $_SERVER['LARAVEL_ENV'];
+    
+    return $app->detectEnvironment(array(
 
-	'local' => array('your-machine-name'),
+        'local' => array('your-machine-name'),
 
-));
+    ));
+
+});
 
 /*
 |--------------------------------------------------------------------------
